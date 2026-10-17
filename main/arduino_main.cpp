@@ -94,7 +94,8 @@ void loop() {
            
             
             while (!apds.colorAvailable()) { 
-                delay(5); } // Wait until color is read from the sensor 
+                delay(5); 
+            } // Wait until color is read from the sensor 
             apds.readColor(r, g, b, a);
             Console.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
             delay(100); 
