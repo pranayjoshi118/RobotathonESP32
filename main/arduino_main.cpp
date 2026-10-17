@@ -31,6 +31,8 @@ APDS9960 apds = APDS9960(I2C_0, APDS9960_INT);
 
 #define IN1  16  // Control pin 1
 #define IN2  17  // Control pin 2
+#define IN3  19  // Control pin 1
+#define IN4  18 
 
 extern ControllerPtr myControllers[BP32_MAX_GAMEPADS]; // BP32 library allows for up to 4 concurrent controller connections, but we only need 1
 
@@ -78,12 +80,21 @@ void loop() {
     digitalWrite(IN2, LOW); // Direction control
 
     delay(1000);  // Run for 1 second
-
+    //Console.printf("here");
     // Stop motor
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, LOW);
 
     delay(1000); // Stop for 1 second
+
+    analogWrite(IN3, 255);  // PWM signal
+    digitalWrite(IN4, LOW); // Direction control
+
+    delay(1000);  // Run for 1 second
+    //Console.printf("here");
+    // Stop motor
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, LOW);
 
     vTaskDelay(1);
     int r, g, b, a;
