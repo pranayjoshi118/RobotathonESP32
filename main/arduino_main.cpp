@@ -31,12 +31,13 @@ extern ControllerPtr myControllers[BP32_MAX_GAMEPADS]; // BP32 library allows fo
 
 void moveForward();
 void moveBackward();
-/*void getDistance();
+/* void getDistance();
 void getColor();
 void turnLeft();
 void turnRight();
 */
 void stopMotors();
+
 
 void dumpGamepad(ControllerPtr ctl) {
     Serial.printf(
@@ -57,7 +58,7 @@ void dumpGamepad(ControllerPtr ctl) {
     );
 }
 
-const int deadzone = 100; //controller deadzone, prevents stick drift   
+const int deadzone = 40; //controller deadzone, prevents stick drift   
 
 void runController(ControllerPtr ctl) {
     int y = ctl->axisY();
@@ -122,14 +123,16 @@ void setup() {
            if (myController && myController->isConnected() && myController->hasData()) {        
            
             runController(myController); // process and executes controller inputs when connected
+            Serial.printf("OVER HERE\n");
 
             dumpGamepad(myController); // Prints the gamepad state, delete or comment if don't need
+        
        }
 
       
     }
 
-    stopMotors(); // Stops motors when controller is disconnected
+   // stopMotors(); // Stops motors when controller is disconnected
     vTaskDelay(10); // Ensures WDT does not get triggered when no controller is connected
 }
 
@@ -141,18 +144,18 @@ void moveForward() {
 }
 
 void moveBackward() {
-    digitalWrite(IN1, LOW);
-    analogWrite(IN2, 200);
-    digitalWrite(IN3, LOW);
-    analogWrite(IN4, 200);
+    analogWrite(IN1, 255);
+    digitalWrite(IN2, HIGH);
+    analogWrite(IN3, 255);
+    digitalWrite(IN4, HIGH);
 }
 
 
 void stopMotors() {
-    digitalWrite(IN1, HIGH);
-    digitalWrite(IN2, HIGH);
-    digitalWrite(IN3, HIGH);
-    digitalWrite(IN4, HIGH);
+    analogWrite(IN1, 0);
+    digitalWrite(IN1, LOW);
+    analogWrite(IN3, 0);
+    digitalWrite(IN4, LOW);
 }
 /*
 void turnLeft() {
