@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../build"
+		},
+		{
+			"path": "../components"
+		},
+		{
+			"path": "."
+		}
+	]
+}
