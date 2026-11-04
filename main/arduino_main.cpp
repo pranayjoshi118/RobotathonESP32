@@ -85,25 +85,25 @@ void setup() {
     pinMode(IN4, OUTPUT);
 
     //sets up I2C protocol
-            I2C_0.begin(I2C_SDA, I2C_SCL, I2C_FREQ);
+    I2C_0.begin(I2C_SDA, I2C_SCL, I2C_FREQ);
 
-            //sets up color sensor
-            apds.setInterruptPin(APDS9960_INT);
-            apds.begin();
-            Serial.begin(115200);
-            // set up Serial Communication and line sensor pins
-            qtr.setTypeAnalog(); // or setTypeAnalog()
-            qtr.setSensorPins((const uint8_t[]) {32, 33}, 2); // pin numbers go in the curly brackets {}, and number of sensors in use goes after
+    //sets up color sensor
+    apds.setInterruptPin(APDS9960_INT);
+    apds.begin();
+    Serial.begin(115200);
+    // set up Serial Communication and line sensor pins
+    qtr.setTypeAnalog(); // or setTypeAnalog()
+    qtr.setSensorPins((const uint8_t[]) {32, 33}, 2); // pin numbers go in the curly brackets {}, and number of sensors in use goes after
 
-            // line sensor calibration sequence
-            for (uint8_t i = 0; i < 250; i++) { 
-            Serial.printf("calibrating %d/250\n", i); // 250 is the number of calibrations recommended by manufacturer
-            qtr.calibrate(); 
-            delay(20);
-        
-            }
-        
-        }
+    // line sensor calibration sequence
+    for (uint8_t i = 0; i < 250; i++) { 
+        Serial.printf("calibrating %d/250\n", i); // 250 is the number of calibrations recommended by manufacturer
+        qtr.calibrate(); 
+        delay(20);
+
+    }
+
+}
 
 
  void loop() {
@@ -136,26 +136,37 @@ void setup() {
     vTaskDelay(10); // Ensures WDT does not get triggered when no controller is connected
 }
 
+
 void moveForward() {
     analogWrite(IN1, 255);
-    digitalWrite(IN2, LOW);
+    //digitalWrite(IN2, LOW);
+    analogWrite(IN2, 0);
     analogWrite(IN3, 255);
-    digitalWrite(IN4, LOW);
+    analogWrite(IN4, 0);
+    //digitalWrite(IN4, LOW);
 }
 
 void moveBackward() {
+    /*
     analogWrite(IN1, 255);
     digitalWrite(IN2, HIGH);
     analogWrite(IN3, 255);
     digitalWrite(IN4, HIGH);
+    printf("going backwards\n");*/
+    analogWrite(IN1, 0);
+    //digitalWrite(IN2, LOW);
+    analogWrite(IN2, 255);
+    analogWrite(IN3, 0);
+    analogWrite(IN4, 255);
 }
 
 
 void stopMotors() {
     analogWrite(IN1, 0);
-    digitalWrite(IN1, LOW);
+    analogWrite(IN2, 0);
     analogWrite(IN3, 0);
-    digitalWrite(IN4, LOW);
+    analogWrite(IN4, 0);
+    //printf("stopping motors\n");
 }
 /*
 void turnLeft() {
