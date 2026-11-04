@@ -108,28 +108,28 @@ void setup() {
 
  void loop() {
     int r, g, b, a;
-        while (!apds.colorAvailable()) { delay(5); } // Wait until color is read from the sensor 
-            apds.readColor(r, g, b, a);
-          //  Serial.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
-            delay(100); // Ensures WDT does not get triggered when no controller is connected
-            BP32.update(); 
+    while (!apds.colorAvailable()) { 
+        delay(5); 
+    } // Wait until color is read from the sensor 
+    apds.readColor(r, g, b, a);
 
-            qtr.readLineBlack(sensors); // Get calibrated sensor values returned into sensors[]
-            Serial.printf("S1: %d S2: %d\n", sensors[0], sensors[1]);
-            delay(250);
+    Serial.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
+    delay(100); // Ensures WDT does not get triggered when no controller is connected
+    BP32.update(); 
+
+    qtr.readLineBlack(sensors); // Get calibrated sensor values returned into sensors[]
+    Serial.printf("S1: %d S2: %d\n", sensors[0], sensors[1]);
+    delay(250);
 
 
-         for (auto myController : myControllers) { // Only execute code when controller is connected
-           if (myController && myController->isConnected() && myController->hasData()) {        
-           
+    for (auto myController : myControllers) { // Only execute code when controller is connected
+        if (myController && myController->isConnected() && myController->hasData()) {        
+        
             runController(myController); // process and executes controller inputs when connected
             Serial.printf("OVER HERE\n");
-
             dumpGamepad(myController); // Prints the gamepad state, delete or comment if don't need
         
-       }
-
-      
+        }
     }
 
    // stopMotors(); // Stops motors when controller is disconnected
@@ -139,22 +139,13 @@ void setup() {
 
 void moveForward() {
     analogWrite(IN1, 255);
-    //digitalWrite(IN2, LOW);
     analogWrite(IN2, 0);
     analogWrite(IN3, 255);
     analogWrite(IN4, 0);
-    //digitalWrite(IN4, LOW);
 }
 
 void moveBackward() {
-    /*
-    analogWrite(IN1, 255);
-    digitalWrite(IN2, HIGH);
-    analogWrite(IN3, 255);
-    digitalWrite(IN4, HIGH);
-    printf("going backwards\n");*/
     analogWrite(IN1, 0);
-    //digitalWrite(IN2, LOW);
     analogWrite(IN2, 255);
     analogWrite(IN3, 0);
     analogWrite(IN4, 255);
