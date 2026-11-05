@@ -29,12 +29,24 @@ APDS9960 apds = APDS9960(I2C_0, APDS9960_INT);
 
 extern ControllerPtr myControllers[BP32_MAX_GAMEPADS]; // BP32 library allows for up to 4 concurrent controller connections, but we only need 1
 
+struct Color {
+    int r;
+    int g;
+    int b;
+    int a;
+};
+
+const int deadzone = 400; //controller deadzone, prevents stick drift   
+bool manual_mode = true;
+std::vector<Color> saved_colors {};
+
 void moveForward();
 void moveBackward();
-/* void getDistance();
-void getColor();
 void turnLeft();
 void turnRight();
+void moveForwardUntilColorFound();
+/* void getDistance();
+void getColor();
 */
 void stopMotors();
 
@@ -58,18 +70,29 @@ void dumpGamepad(ControllerPtr ctl) {
     );
 }
 
-const int deadzone = 40; //controller deadzone, prevents stick drift   
-
 void runController(ControllerPtr ctl) {
     int y = ctl->axisY();
+    int x = ctl->axisX();
+
+    if (ctl->a()) {
+        printf("switched mode\n");
+        manual_mode = !manual_mode;
+    } 
+    
     
     // Process controller inputs and execute corresponding actions
-    if (y < -deadzone) { //joystick pushed forward
-        moveForward();
-    } else if (y > deadzone) { //joystick pushed backward
-        moveBackward();
-    } else {
-        stopMotors();
+    if (manual_mode) {
+        if (y < -deadzone && fabs(x) < 60) { //joystick pushed forward
+            moveForward();
+        } else if (y > deadzone && fabs(x) < 60) { //joystick pushed backward
+            moveBackward();
+        } else if (x < -deadzone && fabs(y) < 60) {
+            turnLeft();
+        } else if (x > deadzone && fabs(y) < 60) {
+            turnRight();
+        } else {
+            stopMotors();
+        }
     }
 }
 
@@ -78,6 +101,7 @@ void setup() {
     BP32.forgetBluetoothKeys(); 
     esp_log_level_set("gpio", ESP_LOG_ERROR); // Suppress info log spam from gpio_isr_service
     uni_bt_allowlist_set_enabled(true);
+
 
     pinMode(IN1, OUTPUT); //defining motor pins as outputs
     pinMode(IN2, OUTPUT);
@@ -126,7 +150,7 @@ void setup() {
         if (myController && myController->isConnected() && myController->hasData()) {        
         
             runController(myController); // process and executes controller inputs when connected
-            Serial.printf("OVER HERE\n");
+            //Serial.printf("OVER HERE\n");
             dumpGamepad(myController); // Prints the gamepad state, delete or comment if don't need
         
         }
@@ -138,6 +162,7 @@ void setup() {
 
 
 void moveForward() {
+    printf("Moving Forward\n");
     analogWrite(IN1, 255);
     analogWrite(IN2, 0);
     analogWrite(IN3, 255);
@@ -145,6 +170,7 @@ void moveForward() {
 }
 
 void moveBackward() {
+    printf("Moving Backward\n");
     analogWrite(IN1, 0);
     analogWrite(IN2, 255);
     analogWrite(IN3, 0);
@@ -158,6 +184,41 @@ void stopMotors() {
     analogWrite(IN3, 0);
     analogWrite(IN4, 0);
     //printf("stopping motors\n");
+}
+
+void turnLeft() {
+    printf("Turning Left\n");
+    analogWrite(IN1, 255);
+    analogWrite(IN2, 0);
+    analogWrite(IN3, 150);
+    analogWrite(IN4, 0);
+}
+
+void turnRight() {
+    printf("Turning Right\n");
+    analogWrite(IN1, 150);
+    analogWrite(IN2, 0);
+    analogWrite(IN3, 255);
+    analogWrite(IN4, 0);
+}
+
+void processColor(int& r, int& g, int& b, int& a) {
+    
+}
+
+void moveForwardUntilColorFound() {
+    if (saved_colors.size() == 0) {
+        return;
+    }
+    int r, g, b, a;
+    while (!apds.colorAvailable()) { 
+        delay(5); 
+    } // Wait until color is read from the sensor 
+    apds.readColor(r, g, b, a);
+    Color color_to_match = saved_colors[0];
+    while (r != color_to_match.r && g != color_to_match.g && b != color_to_match.b) {
+        moveForward();
+    }
 }
 /*
 void turnLeft() {
