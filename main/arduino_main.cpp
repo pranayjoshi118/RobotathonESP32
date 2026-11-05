@@ -190,14 +190,14 @@ void turnLeft() {
     printf("Turning Left\n");
     analogWrite(IN1, 255);
     analogWrite(IN2, 0);
-    analogWrite(IN3, 150);
-    analogWrite(IN4, 0);
+    analogWrite(IN3, 0);
+    analogWrite(IN4, 255);
 }
 
 void turnRight() {
     printf("Turning Right\n");
-    analogWrite(IN1, 150);
-    analogWrite(IN2, 0);
+    analogWrite(IN1, 0);
+    analogWrite(IN2, 255);
     analogWrite(IN3, 255);
     analogWrite(IN4, 0);
 }
@@ -220,18 +220,3 @@ void moveForwardUntilColorFound() {
         moveForward();
     }
 }
-/*
-void turnLeft() {
-    digitalWrite(IN1, LOW); //left motor backward
-    analogWrite(IN2, 200);
-    analogWrite(IN3, 200); //right motor forward
-    digitalWrite(IN4, 255);  
-}
-
-void turnRight() {
-    analogWrite(IN1, 200); //left motor forward
-    digitalWrite(IN2, LOW);
-    digitalWrite(IN3, LOW); //right motor backward
-    analogWrite(IN4, 200);
-}
-*/
