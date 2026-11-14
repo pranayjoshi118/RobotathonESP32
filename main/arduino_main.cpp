@@ -11,7 +11,7 @@
 #include <Wire.h>
 #include <Arduino_APDS9960.h>
 #include <bits/stdc++.h>
-#define APDS9960_INT 0
+#define APDS9960_INT 2
 #define I2C_SDA 21
 #define I2C_SCL 22
 #define I2C_FREQ 100000
@@ -107,7 +107,7 @@ void setup() {
     pinMode(IN2, OUTPUT);
     pinMode(IN3, OUTPUT);   
     pinMode(IN4, OUTPUT);
-    /*
+    
     //sets up I2C protocol
     I2C_0.begin(I2C_SDA, I2C_SCL, I2C_FREQ);
 
@@ -126,48 +126,28 @@ void setup() {
         delay(20);
 
     }
-    */
+    
 }
 
 
  void loop() {
 
-    /*
+    
     int r, g, b, a;
     while (!apds.colorAvailable()) { 
         delay(5); 
     } // Wait until color is read from the sensor 
     apds.readColor(r, g, b, a);
 
-    //Serial.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
+    Serial.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
     delay(100); // Ensures WDT does not get triggered when no controller is connected
     BP32.update(); 
 
     qtr.readLineBlack(sensors); // Get calibrated sensor values returned into sensors[]
     //Serial.printf("S1: %d S2: %d\n", sensors[0], sensors[1]);
     delay(250);
-    */
-
-    moveForward();
-    delay(10000);
-    stopMotors();
-    delay(10000);
-
-    moveBackward();
-    delay(10000);
-    stopMotors();
-    delay(10000);
-
-    turnLeft();
-    delay(10000);
-    stopMotors();
-    delay(10000);
-
-    turnRight();
-    delay(10000);
-    stopMotors();
-    delay(10000);
-        
+    
+    
    
 
 
