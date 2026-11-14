@@ -107,7 +107,7 @@ void setup() {
     pinMode(IN2, OUTPUT);
     pinMode(IN3, OUTPUT);   
     pinMode(IN4, OUTPUT);
-
+    /*
     //sets up I2C protocol
     I2C_0.begin(I2C_SDA, I2C_SCL, I2C_FREQ);
 
@@ -126,24 +126,49 @@ void setup() {
         delay(20);
 
     }
-
+    */
 }
 
 
  void loop() {
+
+    /*
     int r, g, b, a;
     while (!apds.colorAvailable()) { 
         delay(5); 
     } // Wait until color is read from the sensor 
     apds.readColor(r, g, b, a);
 
-    Serial.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
+    //Serial.printf("RED: %d GREEN: %d BLUE: %d AMBIENT: %d\n", r, g, b, a);
     delay(100); // Ensures WDT does not get triggered when no controller is connected
     BP32.update(); 
 
     qtr.readLineBlack(sensors); // Get calibrated sensor values returned into sensors[]
-    Serial.printf("S1: %d S2: %d\n", sensors[0], sensors[1]);
+    //Serial.printf("S1: %d S2: %d\n", sensors[0], sensors[1]);
     delay(250);
+    */
+
+    moveForward();
+    delay(10000);
+    stopMotors();
+    delay(10000);
+
+    moveBackward();
+    delay(10000);
+    stopMotors();
+    delay(10000);
+
+    turnLeft();
+    delay(10000);
+    stopMotors();
+    delay(10000);
+
+    turnRight();
+    delay(10000);
+    stopMotors();
+    delay(10000);
+        
+   
 
 
     for (auto myController : myControllers) { // Only execute code when controller is connected
@@ -155,62 +180,79 @@ void setup() {
         
         }
     }
+  
 
    // stopMotors(); // Stops motors when controller is disconnected
     vTaskDelay(10); // Ensures WDT does not get triggered when no controller is connected
-}
-
-
+}   
 void moveForward() {
     printf("Moving Forward\n");
     analogWrite(IN1, 255);
     analogWrite(IN2, 0);
-    analogWrite(IN3, 255);
-    analogWrite(IN4, 0);
+    analogWrite(IN3, 0);
+    analogWrite(IN4, 255);
 }
 
 void moveBackward() {
     printf("Moving Backward\n");
     analogWrite(IN1, 0);
     analogWrite(IN2, 255);
-    analogWrite(IN3, 0);
-    analogWrite(IN4, 255);
+    analogWrite(IN3, 255);
+    analogWrite(IN4, 0);
 }
 
-
 void stopMotors() {
+    printf("stopping motors\n");
     analogWrite(IN1, 0);
     analogWrite(IN2, 0);
     analogWrite(IN3, 0);
     analogWrite(IN4, 0);
-    //printf("stopping motors\n");
 }
 
 void turnLeft() {
     printf("Turning Left\n");
     analogWrite(IN1, 255);
     analogWrite(IN2, 0);
-    analogWrite(IN3, 0);
-    analogWrite(IN4, 255);
+    analogWrite(IN3, 200);
+    analogWrite(IN4, 0);
 }
 
 void turnRight() {
     printf("Turning Right\n");
     analogWrite(IN1, 0);
-    analogWrite(IN2, 255);
-    analogWrite(IN3, 255);
-    analogWrite(IN4, 0);
+    analogWrite(IN2, 200);
+    analogWrite(IN3, 0);
+    analogWrite(IN4, 255);
 }
 
+/*
 void processColor(int& r, int& g, int& b, int& a) {
     
 }
+
+
+
+void saveColor(int r, int g, int b, int a) {
+    Color color_to_save = {r, g, b, a};
+    saved_colors.push_back(color_to_save);
+}
+
+
+void getColor() {
+    int r, g, b, a;
+    while (!apds.colorAvailable()) { 
+        delay(5); 
+    } // Wait until color is read from the sensor 
+    apds.readColor(r, g, b, a);
+    saveColor(r, g, b, a);
+}
+
 
 void moveForwardUntilColorFound() {
     if (saved_colors.size() == 0) {
         return;
     }
-    int r, g, b, a;
+    int r, g, b, a; 
     while (!apds.colorAvailable()) { 
         delay(5); 
     } // Wait until color is read from the sensor 
@@ -220,3 +262,4 @@ void moveForwardUntilColorFound() {
         moveForward();
     }
 }
+*/
